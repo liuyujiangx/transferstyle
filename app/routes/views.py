@@ -4,7 +4,6 @@ from threading import Thread
 from PIL import Image
 from flask import request, jsonify
 
-
 from app import db, app
 from app.models import Spotinf, Articles, Userarticle, User
 from app.routes.login import Login
@@ -50,17 +49,21 @@ def upload():
     img = request.files.get('imgFile')
     data = request.form.to_dict()
     img_name = str(idworker.get_id()) + '.jpg'
-    img_url = app.config["UP_DIR"] +'upload/before/'
-    img.save(img_url+ img_name)
-    async_slow_function(app.config['UP_DIR']+'upload/before/',img_name,int(data['num']))
+    img_url = app.config["UP_DIR"] + 'upload/before/'
+    img.save(img_url + img_name)
+    if int(data['num']) != -1:
+        async_slow_function(app.config['UP_DIR'] + 'upload/before/', img_name, int(data['num']))
+        imgurl = 'https://www.yujl.top:5050/after/' + str(data['num']) + '--' + img_name
+    else:
+        imgurl = 'https://www.yujl.top:5050/before/'+ img_name
     for i in data:
-        print(i,data[i])
+        print(i, data[i])
     article_id = idworker.get_id()
     articles = Articles(
         articleid=article_id,
         title=data['title'],
         content=data['content'],
-        imgurl='https://www.yujl.top:5050/after/' + str(data['num'])+'--' + img_name,
+        imgurl=imgurl,
         spotid=data['spotid'],
         username=data['username'],
 
@@ -80,39 +83,43 @@ def upload():
     db.session.add(userarticle)
     db.session.commit()
 
-
     return jsonify({"code": 1})
+
 
 @home.route('/test')
 def test():
-    async_slow_function(app.config['UP_DIR']+'upload/before/','学校背景.jpg',1,)  #调用多线程
+    async_slow_function(app.config['UP_DIR'] + 'upload/before/', '学校背景.jpg', 1, )  # 调用多线程
     return '成功'
+
+
 @home.route('/lstzs')
 def lstzs():
-    res = {
-        "-1":{"name":"不转换","url":''},
-         "0":{"name":"模型1","url":'https://www.yujl.top:5050/imgs/0--1263450747610206208.jpg'},
-         "1":{"name":"模型2","url":'https://www.yujl.top:5050/imgs/1--1263450360094265344.jpg'},
-         "2":{"name":"模型3","url":'https://www.yujl.top:5050/imgs/2--1263450428796964864.jpg'},
-         "3":{"name":"模型4","url":'https://www.yujl.top:5050/imgs/3--1263450487294922752.jpg'},
-         "4":{"name":"模型5","url":'https://www.yujl.top:5050/imgs/4--1263450552902225920.jpg'},
-         "5":{"name":"模型6","url":'https://www.yujl.top:5050/imgs/5--1263450256796946432.jpg'},
-         "6":{"name":"模型7","url":'https://www.yujl.top:5050/imgs/6--1263450618463391744.jpg'},
-    }
+    res = [
+        {"id": "-1", "name": "不转换", "url": ''},
+        {"id": "0", "name": "模型1", "url": 'https://www.yujl.top:5050/imgs/0--1263450747610206208.jpg'},
+        {"id": "1", "name": "模型2", "url": 'https://www.yujl.top:5050/imgs/1--1263450360094265344.jpg'},
+        {"id": "2", "name": "模型3", "url": 'https://www.yujl.top:5050/imgs/2--1263450428796964864.jpg'},
+        {"id": "3", "name": "模型4", "url": 'https://www.yujl.top:5050/imgs/3--1263450487294922752.jpg'},
+        {"id": "4", "name": "模型5", "url": 'https://www.yujl.top:5050/imgs/4--1263450552902225920.jpg'},
+        {"id": "5", "name": "模型6", "url": 'https://www.yujl.top:5050/imgs/5--1263450256796946432.jpg'},
+        {"id": "6", "name": "模型7", "url": 'https://www.yujl.top:5050/imgs/6--1263450618463391744.jpg'},
+    ]
     return jsonify(res)
 
+
 #  风格迁移
-def change(file_path,filename,num):#图片地址，图片名称，模型号码
-    img_compress(file_path+filename, file_path+filename)#压缩图片
+def change(file_path, filename, num):  # 图片地址，图片名称，模型号码
+    img_compress(file_path + filename, file_path + filename)  # 压缩图片
     # 调用模型
-    model_src = app.config["UP_DIR"]+'fast-neural-style-tensorflow-master/model/'  # 模型地址
+    model_src = app.config["UP_DIR"] + 'fast-neural-style-tensorflow-master/model/'  # 模型地址
     model_list = os.listdir(model_src)  # 模型名称
     model_file = model_src + model_list[num]
-    img_name = str(num)+'--' + filename #转换后的风格图名称
-    model_url = app.config["UP_DIR"]+'fast-neural-style-tensorflow-master/eval.py'
-    cmd = 'python '+model_url+' --model_file ' +model_file + ' --image_file ' +file_path+filename+\
-          ' --image_name ' +img_name+ ' --imaged_file ' + app.config['UP_DIR']+'upload/after'
+    img_name = str(num) + '--' + filename  # 转换后的风格图名称
+    model_url = app.config["UP_DIR"] + 'fast-neural-style-tensorflow-master/eval.py'
+    cmd = 'python ' + model_url + ' --model_file ' + model_file + ' --image_file ' + file_path + filename + \
+          ' --image_name ' + img_name + ' --imaged_file ' + app.config['UP_DIR'] + 'upload/after'
     os.system(cmd)
+
 
 '''
 cmd = 'python C:/www/style_changed/app/fast-neural-style-tensorflow-master/eval.py --model_file ' \
@@ -127,6 +134,7 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 
 
 '''
+
 
 # 获取文件大小（KB）
 def get_img_kb(filePath):
@@ -151,8 +159,9 @@ def img_compress(from_src, save_src):
     if get_img_kb(save_src) > 60:
         img.save(save_src, optimize=True, quality=75)
 
-#多线程
-def async_slow_function(file_path,filename,num):
-    thr = Thread(target=change, args=[file_path,filename,num])
+
+# 多线程
+def async_slow_function(file_path, filename, num):
+    thr = Thread(target=change, args=[file_path, filename, num])
     thr.start()
     return thr
