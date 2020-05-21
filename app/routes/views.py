@@ -49,9 +49,10 @@ idworker = IdWorker()
 def upload():
     img = request.files.get('imgFile')
     data = request.form.to_dict()
-    print(img.filename)
     img_name = str(idworker.get_id()) + '.jpg'
-    img.save(app.config["UP_DIR"] + img_name)
+    img_url = app.config["UP_DIR"] +'upload/before/'
+    img.save(img_url+ img_name)
+    async_slow_function(app.config['UP_DIR']+'upload/before/',img_name,int(data['num']))
     for i in data:
         print(i,data[i])
     article_id = idworker.get_id()
@@ -59,7 +60,7 @@ def upload():
         articleid=article_id,
         title=data['title'],
         content=data['content'],
-        imgurl='https://www.yujl.top:5050/' + img_name,
+        imgurl='https://www.yujl.top:5050/after/' + str(data['num'])+'--' + img_name,
         spotid=data['spotid'],
         username=data['username'],
 
@@ -86,7 +87,19 @@ def upload():
 def test():
     async_slow_function(app.config['UP_DIR']+'upload/before/','学校背景.jpg',1,)  #调用多线程
     return '成功'
-
+@home.route('/lstzs')
+def lstzs():
+    res = {
+        -1:{"name":"不转换","url":''},
+         0:{"name":"模型1","url":'https://www.yujl.top:5050/imgs/0--1263450747610206208.jpg'},
+         1:{"name":"模型2","url":'https://www.yujl.top:5050/imgs/1--1263450360094265344.jpg'},
+         2:{"name":"模型3","url":'https://www.yujl.top:5050/imgs/2--1263450428796964864.jpg'},
+         3:{"name":"模型4","url":'https://www.yujl.top:5050/imgs/3--1263450487294922752.jpg'},
+         4:{"name":"模型5","url":'https://www.yujl.top:5050/imgs/4--1263450552902225920.jpg'},
+         5:{"name":"模型6","url":'https://www.yujl.top:5050/imgs/5--1263450256796946432.jpg'},
+         6:{"name":"模型7","url":'https://www.yujl.top:5050/imgs/6--1263450618463391744.jpg'},
+    }
+    return jsonify(res)
 
 #  风格迁移
 def change(file_path,filename,num):#图片地址，图片名称，模型号码
@@ -95,13 +108,10 @@ def change(file_path,filename,num):#图片地址，图片名称，模型号码
     model_src = app.config["UP_DIR"]+'fast-neural-style-tensorflow-master/model/'  # 模型地址
     model_list = os.listdir(model_src)  # 模型名称
     model_file = model_src + model_list[num]
-    print(1,model_file)
     img_name = str(num)+'--' + filename #转换后的风格图名称
-    print('filename',filename)
     model_url = app.config["UP_DIR"]+'fast-neural-style-tensorflow-master/eval.py'
     cmd = 'python '+model_url+' --model_file ' +model_file + ' --image_file ' +file_path+filename+\
           ' --image_name ' +img_name+ ' --imaged_file ' + app.config['UP_DIR']+'upload/after'
-    print(cmd)
     os.system(cmd)
 
 '''
