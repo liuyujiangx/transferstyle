@@ -90,14 +90,14 @@ def test():
 @home.route('/lstzs')
 def lstzs():
     res = {
-        -1:{"name":"不转换","url":''},
-         0:{"name":"模型1","url":'https://www.yujl.top:5050/imgs/0--1263450747610206208.jpg'},
-         1:{"name":"模型2","url":'https://www.yujl.top:5050/imgs/1--1263450360094265344.jpg'},
-         2:{"name":"模型3","url":'https://www.yujl.top:5050/imgs/2--1263450428796964864.jpg'},
-         3:{"name":"模型4","url":'https://www.yujl.top:5050/imgs/3--1263450487294922752.jpg'},
-         4:{"name":"模型5","url":'https://www.yujl.top:5050/imgs/4--1263450552902225920.jpg'},
-         5:{"name":"模型6","url":'https://www.yujl.top:5050/imgs/5--1263450256796946432.jpg'},
-         6:{"name":"模型7","url":'https://www.yujl.top:5050/imgs/6--1263450618463391744.jpg'},
+        "-1":{"name":"不转换","url":''},
+         "0":{"name":"模型1","url":'https://www.yujl.top:5050/imgs/0--1263450747610206208.jpg'},
+         "1":{"name":"模型2","url":'https://www.yujl.top:5050/imgs/1--1263450360094265344.jpg'},
+         "2":{"name":"模型3","url":'https://www.yujl.top:5050/imgs/2--1263450428796964864.jpg'},
+         "3":{"name":"模型4","url":'https://www.yujl.top:5050/imgs/3--1263450487294922752.jpg'},
+         "4":{"name":"模型5","url":'https://www.yujl.top:5050/imgs/4--1263450552902225920.jpg'},
+         "5":{"name":"模型6","url":'https://www.yujl.top:5050/imgs/5--1263450256796946432.jpg'},
+         "6":{"name":"模型7","url":'https://www.yujl.top:5050/imgs/6--1263450618463391744.jpg'},
     }
     return jsonify(res)
 
