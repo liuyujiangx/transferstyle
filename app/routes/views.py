@@ -31,7 +31,7 @@ def index():
 log = Login()
 
 
-@home.route('/login', methods=['GET'])
+@home.route('/login/', methods=['GET'])
 def login():
     res = request.args.to_dict()
     log.set(res['code'])
@@ -105,7 +105,7 @@ def upload():
     return jsonify({"code": data['num'], "imgurl": imgurl})
 
 
-@home.route('/test')
+@home.route('/test/')
 def test():
     # async_slow_function(app.config['UP_DIR'] + 'upload/before/', '学校背景.jpg', 1, )  # 调用多线程
     # print(app.config["SECRET_KEY"])
@@ -113,7 +113,7 @@ def test():
     return filename
 
 
-@home.route('/lstzs')
+@home.route('/lstzs/')
 def lstzs():
     res = [
         {"id": "-1", "name": "不转换", "url": 'https://www.yujl.top:5050/imgs/20151017041702855.jpg'},
@@ -158,7 +158,7 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 
 
 #  增加景点名字，url为包含景点名字的word文档地址
-@home.route('/spotinf/add')
+@home.route('/spotinf/add/')
 def spotinfadd():
     url = request.args.to_dict()
     ls = spotinfprocess.opens(url['url'])
