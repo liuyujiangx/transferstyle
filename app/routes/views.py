@@ -126,7 +126,7 @@ def test():
 @home.route('/lstzs')
 def lstzs():
     res = [
-        {"id": "-1", "name": "不转换", "url": 'https://www.yujl.top:5050/before/1263450618463391744.jpg'},
+        {"id": "-1", "name": "不转换", "url": 'https://www.yujl.top:5050/imgs/20151017041702855.jpg'},
         {"id": "0", "name": "模型1", "url": 'https://www.yujl.top:5050/imgs/0--1263450747610206208.jpg'},
         {"id": "1", "name": "模型2", "url": 'https://www.yujl.top:5050/imgs/1--1263450360094265344.jpg'},
         {"id": "2", "name": "模型3", "url": 'https://www.yujl.top:5050/imgs/2--1263450428796964864.jpg'},
