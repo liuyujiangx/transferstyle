@@ -30,6 +30,7 @@ def login():
     return res['openid']
 
 
+#  景点搜索
 @home.route('/select/')
 def select():
     data = request.args.to_dict()
@@ -47,19 +48,17 @@ idworker = IdWorker()
 
 @home.route('/upload/', methods=["GET", "POST"])
 def upload():
-    img = request.files.get('imgFile')
-    data = request.form.to_dict()
-    img_name = str(idworker.get_id()) + '.jpg'
-    img_url = app.config["UP_DIR"] + 'upload/before/'
+    img = request.files.get('imgFile')  # 获取图片
+    data = request.form.to_dict()  # 获取表单中其他数据
+    img_name = str(idworker.get_id()) + '.jpg'  # 给图片生成名字
+    img_url = app.config["UP_DIR"] + 'upload/before/'  # 将图片保存至转换前的路径
     img.save(img_url + img_name)
-    if int(data['num']) != -1:
-        async_slow_function(app.config['UP_DIR'] + 'upload/before/', img_name, int(data['num']))
-        imgurl = 'https://www.yujl.top:5050/after/' + str(data['num']) + '--' + img_name
+    if int(data['num']) != -1:  # 判断是否转换风格
+        async_slow_function(app.config['UP_DIR'] + 'upload/before/', img_name, int(data['num']))  # 调用多线程
+        imgurl = 'https://www.yujl.top:5050/after/' + str(data['num']) + '--' + img_name  # 转换后的地址
     else:
-        imgurl = 'https://www.yujl.top:5050/before/'+ img_name
-    for i in data:
-        print(i, data[i])
-    article_id = idworker.get_id()
+        imgurl = 'https://www.yujl.top:5050/before/' + img_name
+    article_id = idworker.get_id()  # 生成id
     articles = Articles(
         articleid=article_id,
         title=data['title'],
@@ -75,7 +74,7 @@ def upload():
         user = User(
             userid=data['userid'],
             username=data['username'],
-            userurl = data['userurl']
+            userurl=data['userurl']
         )
         db.session.add(user)
         db.session.commit()
@@ -87,7 +86,6 @@ def upload():
         db.session.commit()
     except:
         pass
-
 
     userarticle = Userarticle(
         userid=data['userid'],
@@ -148,6 +146,8 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 
 '''
 
+
+#  增加景点名字，url为包含景点名字的word文档地址
 @home.route('/spotinf/add')
 def spotinfadd():
     url = request.args.to_dict()
@@ -155,15 +155,13 @@ def spotinfadd():
     for i in ls:
         spotid = idworker.get_id()
         spotinf = Spotinf(
-            spotid = spotid,
-            spotname = i,
-            userid = '1263023717747920896'
+            spotid=spotid,
+            spotname=i,
+            userid='1263023717747920896'
         )
         db.session.add(spotinf)
         db.session.commit()
-    return 's'
-
-
+    return jsonify({"code": "1", "msg": "增加成功"})
 
 
 # 获取文件大小（KB）
