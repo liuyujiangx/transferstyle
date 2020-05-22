@@ -25,6 +25,7 @@ def change_filename(filename):
 
 @home.route('/')
 def index():
+
     return 'hello'
 
 
@@ -155,6 +156,19 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 
 
 '''
+
+@home.route('/get/articles/')
+def get_articles():
+    data=request.args.to_dict()
+    print(data)
+    articles = Articles.query.paginate(page=int(data['page']),per_page=int(data['limit']))
+
+    return jsonify([{"articleid": article.articleid, "title": article.title, "content": article.content,
+                     "imgurl": article.imgurl,"spotid": article.spotid,"good": article.good,"time": article.time,
+                     "username": article.username}for article in articles.items])
+
+
+
 
 
 #  增加景点名字，url为包含景点名字的word文档地址
