@@ -138,7 +138,7 @@ def change(file_path, filename, num):  # 图片地址，图片名称，模型号
     img_name = str(num) + '--' + filename  # 转换后的风格图名称
     model_url = app.config["UP_DIR"] + 'fast-neural-style-tensorflow-master/eval.py'
     cmd = 'python ' + model_url + ' --model_file ' + model_file + ' --image_file ' + file_path + filename + \
-          ' --image_name ' + img_name + ' --imaged_file ' + app.config['UP_DIR'] + 'upload/after'
+          ' --image_name ' + img_name + ' --imaged_file ' + app.config['UP_DIR'] + 'upload/'
     os.system(cmd)
 
 
