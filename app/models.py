@@ -23,6 +23,7 @@ class Articles(db.Model):
     good = db.Column(db.Integer)
     time = db.Column(db.DateTime)
     username = db.Column(db.String)
+    userid = db.Column(db.String)
 
 
     def __repr__(self):

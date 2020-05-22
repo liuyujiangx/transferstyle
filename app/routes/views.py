@@ -87,18 +87,13 @@ def upload():
         spotid=data['spotid'],
         username=data['username'],
         good=0,
-        time=datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        time=datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+        userid = data['userid']
 
     )
     db.session.add(articles)
     db.session.commit()
 
-    userarticle = Userarticle(
-        userid=data['userid'],
-        articleid=article_id
-    )
-    db.session.add(userarticle)
-    db.session.commit()
 
 
     return jsonify({"code": data['num'], "imgurl": imgurl})
@@ -168,11 +163,10 @@ def get_articles():
         maxpage = (articles_count // int(data["limit"])) + 1
     articles_list = [{"articleid": article.articleid, "title": article.title, "content": article.content,
                       "imgurl": article.imgurl, "spotid": article.spotid, "good": article.good, "time": article.time,
-                      "username": article.username} for article in articles.items]
+                      "username": article.username,"userid": article.userid} for article in articles.items]
     info = []
     for i in range(len(articles_list)):
-        userarticle = Userarticle.query.filter_by(articleid=articles_list[i].get("articleid")).first()
-        user = User.query.filter_by(userid=userarticle.userid).first()
+        user = User.query.filter_by(userid=articles_list[i].userid).first()
         articles_list[i]["userurl"] = user.userurl
         info.append(articles_list[i])
 
