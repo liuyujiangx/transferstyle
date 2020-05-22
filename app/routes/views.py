@@ -35,7 +35,6 @@ log = Login()
 def login():
     res = request.args.to_dict()
     print(res)
-    res = eval(res['res'])
     log.set(res['code'])
     xx = log.sent_out()
     print(xx)
