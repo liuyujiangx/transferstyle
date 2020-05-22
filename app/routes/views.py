@@ -8,7 +8,7 @@ from app import db, app
 from app.models import Spotinf, Articles, Userarticle, User
 from app.routes.login import Login
 from app.routes.createId import IdWorker
-from app.routes.spotinfprocess import opens
+import app.routes.spotinfprocess
 
 from . import home
 
@@ -150,7 +150,8 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 
 @home.route('/spotinf/add')
 def spotinfadd():
-    ls = opens()
+    url = request.args.to_dict()
+    ls = spotinfadd.opens(url['url'])
     for i in ls:
         spotid = idworker.get_id()
         spotinf = Spotinf(
