@@ -18,7 +18,7 @@ from . import home
 # 修改文件名称
 def change_filename(filename):
     fileinfo = os.path.splitext(filename)
-    filename = datetime.datetime.now().strftime("%Y%m%d%H%%M%S") + str(uuid.uuid4().hex) + fileinfo[-1]
+    filename = datetime.datetime.now().strftime("%Y%m%d%H%%M") + str(uuid.uuid4().hex) + fileinfo[-1]
     return filename
 
 
@@ -67,6 +67,7 @@ def upload():
     img.save(img_url + img_name)
     if int(data['num']) != -1:  # 判断是否转换风格
         async_slow_function(app.config['UP_DIR'] + 'upload/before/', img_name, int(data['num']))  # 调用多线程
+
         imgurl = 'https://www.yujl.top:5050/after/' + str(data['num']) + '--' + img_name  # 转换后的地址
         print('2',imgurl)
     else:
