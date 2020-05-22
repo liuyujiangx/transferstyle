@@ -1,4 +1,6 @@
+import datetime
 import os
+import uuid
 
 from threading import Thread
 from PIL import Image
@@ -6,11 +8,20 @@ from flask import request, jsonify
 
 from app import db, app
 from app.models import Spotinf, Articles, Userarticle, User
+from app.routes import spotinfprocess
 from app.routes.login import Login
 from app.routes.createId import IdWorker
-import app.routes.spotinfprocess
+
 
 from . import home
+
+# 修改文件名称
+def change_filename(filename):
+    fileinfo = os.path.splitext(filename)
+    filename = datetime.datetime.now().strftime("%Y%m%d%H%%M%S") + str(uuid.uuid4().hex) + fileinfo[-1]
+    return filename
+
+
 
 
 @home.route('/')
@@ -50,7 +61,7 @@ idworker = IdWorker()
 def upload():
     img = request.files.get('imgFile')  # 获取图片
     data = request.form.to_dict()  # 获取表单中其他数据
-    img_name = str(idworker.get_id()) + '.jpg'  # 给图片生成名字
+    img_name = change_filename(img.filename)  # 给图片生成名字
     img_url = app.config["UP_DIR"] + 'upload/before/'  # 将图片保存至转换前的路径
     img.save(img_url + img_name)
     if int(data['num']) != -1:  # 判断是否转换风格
@@ -99,8 +110,10 @@ def upload():
 
 @home.route('/test')
 def test():
-    async_slow_function(app.config['UP_DIR'] + 'upload/before/', '学校背景.jpg', 1, )  # 调用多线程
-    return '成功'
+    #async_slow_function(app.config['UP_DIR'] + 'upload/before/', '学校背景.jpg', 1, )  # 调用多线程
+    #print(app.config["SECRET_KEY"])
+    filename = change_filename("daoshdasdasn.jpg")
+    return filename
 
 
 @home.route('/lstzs')
@@ -151,7 +164,7 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 @home.route('/spotinf/add')
 def spotinfadd():
     url = request.args.to_dict()
-    ls = spotinfadd.opens(url['url'])
+    ls = spotinfprocess.opens(url['url'])
     for i in ls:
         spotid = idworker.get_id()
         spotinf = Spotinf(
