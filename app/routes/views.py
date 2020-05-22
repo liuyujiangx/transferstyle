@@ -25,7 +25,6 @@ def change_filename(filename):
 
 @home.route('/')
 def index():
-
     return 'hello'
 
 
@@ -93,15 +92,14 @@ def upload():
     )
     db.session.add(articles)
     db.session.commit()
-    try:
-        userarticle = Userarticle(
-            userid=data['userid'],
-            articleid=article_id
-        )
-        db.session.add(userarticle)
-        db.session.commit()
-    except:
-        pass
+
+    userarticle = Userarticle(
+        userid=data['userid'],
+        articleid=article_id
+    )
+    db.session.add(userarticle)
+    db.session.commit()
+
 
     return jsonify({"code": data['num'], "imgurl": imgurl})
 
@@ -157,34 +155,31 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 
 '''
 
+
 @home.route('/get/articles/')
 def get_articles():
-    data=request.args.to_dict()
+    data = request.args.to_dict()
     print(data)
-    articles = Articles.query.paginate(page=int(data['page']),per_page=int(data['limit']))
+    articles = Articles.query.paginate(page=int(data['page']), per_page=int(data['limit']))
     articles_count = Articles.query.count()
-    if articles_count%int(data["limit"]) == 0:
-        maxpage = articles_count//int(data["limit"])
+    if articles_count % int(data["limit"]) == 0:
+        maxpage = articles_count // int(data["limit"])
     else:
-        maxpage = (articles_count // int(data["limit"]))+1
+        maxpage = (articles_count // int(data["limit"])) + 1
     articles_list = [{"articleid": article.articleid, "title": article.title, "content": article.content,
-                     "imgurl": article.imgurl,"spotid": article.spotid,"good": article.good,"time": article.time,
-                     "username": article.username}for article in articles.items]
+                      "imgurl": article.imgurl, "spotid": article.spotid, "good": article.good, "time": article.time,
+                      "username": article.username} for article in articles.items]
     info = []
     for i in range(len(articles_list)):
         userarticle = Userarticle.query.filter_by(articleid=articles_list[i].get("articleid")).first()
-        user = User.query.filter_by(userid = userarticle.userid).first()
+        user = User.query.filter_by(userid=userarticle.userid).first()
         articles_list[i]["userurl"] = user.userurl
         info.append(articles_list[i])
 
-
     return jsonify({
-        "info":info,
-        "maxpage":maxpage
+        "info": info,
+        "maxpage": maxpage
     })
-
-
-
 
 
 #  增加景点名字，url为包含景点名字的word文档地址
