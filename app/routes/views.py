@@ -34,20 +34,22 @@ log = Login()
 @home.route('/login', methods=['GET'])
 def login():
     res = request.args.to_dict()
+    print(res)
     res = eval(res['res'])
     log.set(res['code'])
-    res = log.sent_out()
-    try:
-        user = User(
-            userid=res['userid'],
-            username=res['username'],
-            userurl=res['userurl']
-        )
-        db.session.add(user)
-        db.session.commit()
-    except:
-        pass
-    return res['openid']
+    xx = log.sent_out()
+    print(xx)
+    # try:
+    #     user = User(
+    #         userid=res['userid'],
+    #         username=res['username'],
+    #         userurl=res['userurl']
+    #     )
+    #     db.session.add(user)
+    #     db.session.commit()
+    # except:
+    #     pass
+    return xx['openid']
 
 
 #  景点搜索
