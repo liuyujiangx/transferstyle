@@ -19,7 +19,7 @@ from . import home
 def change_filename(filename):
     fileinfo = os.path.splitext(filename)
     filename = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + str(uuid.uuid4().hex) + fileinfo[-1]
-    print(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+    print(datetime.datetime.now().strftime("%Y%m%d"))
     return filename
 
 
@@ -87,7 +87,8 @@ def upload():
         imgurl=imgurl,
         spotid=data['spotid'],
         username=data['username'],
-        good=0
+        good=0,
+        time=datetime.datetime.now().strftime("%Y%m%d")
 
     )
     db.session.add(articles)
