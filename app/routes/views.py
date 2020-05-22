@@ -12,8 +12,8 @@ from app.routes import spotinfprocess
 from app.routes.login import Login
 from app.routes.createId import IdWorker
 
-
 from . import home
+
 
 # 修改文件名称
 def change_filename(filename):
@@ -21,8 +21,6 @@ def change_filename(filename):
     filename = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + str(uuid.uuid4().hex) + fileinfo[-1]
     print(datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
     return filename
-
-
 
 
 @home.route('/')
@@ -39,6 +37,13 @@ def login():
     res = eval(res['res'])
     log.set(res['code'])
     res = log.sent_out()
+    user = User(
+        userid=res['userid'],
+        username=res['username'],
+        userurl=res['userurl']
+    )
+    db.session.add(user)
+    db.session.commit()
     return res['openid']
 
 
@@ -63,17 +68,17 @@ def upload():
     img = request.files.get('imgFile')  # 获取图片
     data = request.form.to_dict()  # 获取表单中其他数据
     img_name = change_filename(img.filename)  # 给图片生成名字
-    print('1',img_name)
+    print('1', img_name)
     img_url = app.config["UP_DIR"] + 'upload/before/'  # 将图片保存至转换前的路径
     img.save(img_url + img_name)
     if int(data['num']) != -1:  # 判断是否转换风格
         async_slow_function(app.config['UP_DIR'] + 'upload/before/', img_name, int(data['num']))  # 调用多线程
 
         imgurl = 'https://www.yujl.top:5050/after/' + str(data['num']) + '--' + img_name  # 转换后的地址
-        print('2',imgurl)
+        print('2', imgurl)
     else:
         imgurl = 'https://www.yujl.top:5050/before/' + img_name
-        print('3',imgurl)
+        print('3', imgurl)
     article_id = idworker.get_id()  # 生成id
     articles = Articles(
         articleid=article_id,
@@ -82,24 +87,12 @@ def upload():
         imgurl=imgurl,
         spotid=data['spotid'],
         username=data['username'],
+        good=0
 
     )
     db.session.add(articles)
     db.session.commit()
     try:
-        user = User(
-            userid=data['userid'],
-            username=data['username'],
-            userurl=data['userurl']
-        )
-        db.session.add(user)
-        db.session.commit()
-        userarticle = Userarticle(
-            userid=data['userid'],
-            articleid=article_id
-        )
-        db.session.add(userarticle)
-        db.session.commit()
         userarticle = Userarticle(
             userid=data['userid'],
             articleid=article_id
@@ -109,16 +102,13 @@ def upload():
     except:
         pass
 
-
-
-
     return jsonify({"code": data['num'], "imgurl": imgurl})
 
 
 @home.route('/test')
 def test():
-    #async_slow_function(app.config['UP_DIR'] + 'upload/before/', '学校背景.jpg', 1, )  # 调用多线程
-    #print(app.config["SECRET_KEY"])
+    # async_slow_function(app.config['UP_DIR'] + 'upload/before/', '学校背景.jpg', 1, )  # 调用多线程
+    # print(app.config["SECRET_KEY"])
     filename = change_filename("daoshdasdasn.jpg")
     return filename
 
