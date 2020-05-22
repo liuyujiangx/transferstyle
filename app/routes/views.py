@@ -95,15 +95,17 @@ def upload():
         )
         db.session.add(userarticle)
         db.session.commit()
+        userarticle = Userarticle(
+            userid=data['userid'],
+            articleid=article_id
+        )
+        db.session.add(userarticle)
+        db.session.commit()
     except:
         pass
 
-    userarticle = Userarticle(
-        userid=data['userid'],
-        articleid=article_id
-    )
-    db.session.add(userarticle)
-    db.session.commit()
+
+
 
     return jsonify({"code": data['num'], "imgurl": imgurl})
 
