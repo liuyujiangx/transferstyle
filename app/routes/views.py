@@ -105,7 +105,7 @@ def upload():
     db.session.add(userarticle)
     db.session.commit()
 
-    return jsonify({"code": 1, "imgurl": imgurl})
+    return jsonify({"code": data['num'], "imgurl": imgurl})
 
 
 @home.route('/test')
