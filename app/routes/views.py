@@ -167,7 +167,9 @@ def get_articles():
     info = []
     for i in range(len(articles_list)):
         user = User.query.filter_by(userid=articles_list[i].userid).first()
+        spotinf = Spotinf.query.filter_by(spotid = articles_list[i].spotid).first()
         articles_list[i]["userurl"] = user.userurl
+        articles_list[i]["spotname"] = spotinf.spotname
         info.append(articles_list[i])
 
     return jsonify({
