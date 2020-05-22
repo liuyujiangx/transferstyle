@@ -37,13 +37,16 @@ def login():
     res = eval(res['res'])
     log.set(res['code'])
     res = log.sent_out()
-    user = User(
-        userid=res['userid'],
-        username=res['username'],
-        userurl=res['userurl']
-    )
-    db.session.add(user)
-    db.session.commit()
+    try:
+        user = User(
+            userid=res['userid'],
+            username=res['username'],
+            userurl=res['userurl']
+        )
+        db.session.add(user)
+        db.session.commit()
+    except:
+        pass
     return res['openid']
 
 
