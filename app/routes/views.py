@@ -162,10 +162,17 @@ def get_articles():
     data=request.args.to_dict()
     print(data)
     articles = Articles.query.paginate(page=int(data['page']),per_page=int(data['limit']))
-
-    return jsonify([{"articleid": article.articleid, "title": article.title, "content": article.content,
+    articles_count = Articles.query.count()
+    if articles_count%data["limit"] == 0:
+        maxpage = articles_count//data["limit"]
+    else:
+        maxpage = (articles_count // data["limit"])+1
+    return jsonify({
+        "info":[{"articleid": article.articleid, "title": article.title, "content": article.content,
                      "imgurl": article.imgurl,"spotid": article.spotid,"good": article.good,"time": article.time,
-                     "username": article.username}for article in articles.items])
+                     "username": article.username}for article in articles.items],
+        "maxpage":maxpage
+    })
 
 
 
