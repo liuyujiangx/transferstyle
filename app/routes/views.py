@@ -88,7 +88,7 @@ def upload():
         spotid=data['spotid'],
         username=data['username'],
         good=0,
-        time=datetime.datetime.now().strftime("%Y%m%d")
+        time=datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
     )
     db.session.add(articles)
