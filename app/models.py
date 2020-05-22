@@ -3,6 +3,7 @@ from datetime import datetime
 from app import db
 
 
+
 class Spotinf(db.Model):
     __tablename__ = 'spotinf'
     spotid =db.Column(db.Integer,primary_key = True)
@@ -52,3 +53,6 @@ class Userarticle(db.Model):
     articleid = db.Column(db.Integer)
     def __repr__(self):
         return "<Userarticle %r>" % self.userid
+
+
+

@@ -8,6 +8,7 @@ from app import db, app
 from app.models import Spotinf, Articles, Userarticle, User
 from app.routes.login import Login
 from app.routes.createId import IdWorker
+from app.routes.spotinfprocess import opens
 
 from . import home
 
@@ -70,12 +71,24 @@ def upload():
     )
     db.session.add(articles)
     db.session.commit()
-    user = User(
-        userid=data['userid'],
-        username=data['username']
-    )
-    db.session.add(user)
-    db.session.commit()
+    try:
+        user = User(
+            userid=data['userid'],
+            username=data['username'],
+            userurl = data['userurl']
+        )
+        db.session.add(user)
+        db.session.commit()
+        userarticle = Userarticle(
+            userid=data['userid'],
+            articleid=article_id
+        )
+        db.session.add(userarticle)
+        db.session.commit()
+    except:
+        pass
+
+
     userarticle = Userarticle(
         userid=data['userid'],
         articleid=article_id
@@ -95,7 +108,7 @@ def test():
 @home.route('/lstzs')
 def lstzs():
     res = [
-        {"id": "-1", "name": "不转换", "url": ''},
+        {"id": "-1", "name": "不转换", "url": 'https://www.yujl.top:5050/before/1263450618463391744.jpg'},
         {"id": "0", "name": "模型1", "url": 'https://www.yujl.top:5050/imgs/0--1263450747610206208.jpg'},
         {"id": "1", "name": "模型2", "url": 'https://www.yujl.top:5050/imgs/1--1263450360094265344.jpg'},
         {"id": "2", "name": "模型3", "url": 'https://www.yujl.top:5050/imgs/2--1263450428796964864.jpg'},
@@ -134,6 +147,22 @@ python D:\dev\transferstyle\app\static/fast-neural-style-tensorflow-master/eval.
 
 
 '''
+
+@home.route('/spotinf/add')
+def spotinfadd():
+    ls = opens()
+    for i in ls:
+        spotid = idworker.get_id()
+        spotinf = Spotinf(
+            spotid = spotid,
+            spotname = i,
+            userid = '1263023717747920896'
+        )
+        db.session.add(spotinf)
+        db.session.commit()
+    return 's'
+
+
 
 
 # 获取文件大小（KB）
