@@ -224,7 +224,15 @@ def add_comment():
     db.session.commit()
     return jsonify({"msg":"添加评论"})
 
-
+@home.route('/get/comment/')
+def get_comment():
+    data = request.args.to_dict()
+    comment = Comment.query.filter_by(articleid = data['articleid']).all
+    info = [{"articleid":i.articleid,"content":i.commentitem,"userid":i.commentid,"username":i.commentname,"time":i.time}for i in comment]
+    return jsonify({
+        "info":info,
+        "msg":"获取文章的评论"
+    })
 # 获取文件大小（KB）
 def get_img_kb(filePath):
     # filePath图片地址（包含图片本身）
