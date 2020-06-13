@@ -214,7 +214,7 @@ def add_comment():
     data = request.args.to_dict()
     user = User.query.filter_by(userid = data["userid"]).first()
     comment = Comment(
-        articleid = data["articleid"],
+        articleid = int(data["articleid"]),
         commentitem = data["content"],
         commentid = data["userid"],
         commentname = user.username,
@@ -228,7 +228,7 @@ def add_comment():
 def get_comment():
     data = request.args.to_dict()
     comment = Comment.query.filter_by(articleid = data['articleid']).all()
-    info = [{"articleid":int(i.articleid),"content":i.commentitem,"userid":i.commentid,"username":i.commentname,"time":i.time} for i in comment]
+    info = [{"articleid":i.articleid,"content":i.commentitem,"userid":i.commentid,"username":i.commentname,"time":i.time} for i in comment]
     return jsonify({
         "info":info,
         "msg":"获取文章的评论"
