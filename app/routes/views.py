@@ -227,7 +227,7 @@ def add_comment():
 @home.route('/get/comment/')
 def get_comment():
     data = request.args.to_dict()
-    comment = Comment.query.filter_by(articleid = data['articleid']).all
+    comment = Comment.query.filter_by(articleid = data['articleid']).all()
     info = [{"articleid":i.articleid,"content":i.commentitem,"userid":i.commentid,"username":i.commentname,"time":i.time} for i in comment]
     return jsonify({
         "info":info,
