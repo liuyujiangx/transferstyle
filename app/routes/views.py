@@ -195,6 +195,19 @@ def spotinfadd():
     return jsonify({"code": "1", "msg": "增加成功"})
 
 
+@home.route('/get/article/')
+def get_article():
+    data = request.args.to_dict()
+    userid = data["userid"]
+    articles = Articles.query.filter_by(userid=userid).all()
+    info = [{"articleid": article.articleid, "title": article.title, "content": article.content,
+                      "imgurl": article.imgurl, "spotid": article.spotid, "good": article.good, "time": article.time,
+                      "username": article.username,"userid": article.userid} for article in articles]
+    return jsonify({
+        "info":info,
+        "msg":"根据用户获取文章"
+    })
+
 # 获取文件大小（KB）
 def get_img_kb(filePath):
     # filePath图片地址（包含图片本身）
