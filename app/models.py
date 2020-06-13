@@ -34,10 +34,9 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     articleid = db.Column(db.Integer)
     commentitem = db.Column(db.String)
-    commentid = db.Column(db.Integer)
+    commentid = db.Column(db.Integer, db.ForeignKey('user.userid'))
     commentname = db.Column(db.String)
     time = db.Column(db.String)
-    userid = db.Column(db.Integer, db.ForeignKey('user.userid'))
 
     def __repr__(self):
         return "<Comment %r>" % self.id
