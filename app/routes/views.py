@@ -235,20 +235,32 @@ def get_comment():
     })
 
 
-# @home.route('/search/')
-# def search():
-#     data = request.args.to_dict()
-#     data = data['data']
-#     article_title = Articles.query.filter(
-#         Articles.title.like("%" + data + "%") if data is not None else "").all()  # 跟标题相关的
-#     article_contetn = Articles.query.filter(
-#         Articles.content.like("%" + data + "%") if data is not None else "").all()  # 跟关键词相关的
-#     spot = Spotinf.query.filter(
-#         Spotinf.spotname.like("%" + data + "%") if data is not None else "").all()  #跟景区相关的
-#     s=set()
-#     spotset=set()
-#     for i in spot:
-#         article_spot = Articles.query.filter_by()
+@home.route('/search/')
+def search():
+    data = request.args.to_dict()
+    data = data['data']
+    article_title = Articles.query.filter(
+        Articles.title.like("%" + data + "%") if data is not None else "").all()  # 跟标题相关的
+    article_contetn = Articles.query.filter(
+        Articles.content.like("%" + data + "%") if data is not None else "").all()  # 跟关键词相关的
+    spot = Spotinf.query.filter(
+        Spotinf.spotname.like("%" + data + "%") if data is not None else "").all()  #跟景区相关的
+    s=set()
+    for i in article_title:
+        s.add(i)
+    for i in article_contetn:
+        s.add(i)
+    for i in spot:
+        article_spot = Articles.query.filter_by(spotid=i.spotid).all()
+        for i in article_spot:
+            s.add(i)
+    info = [{"articleid": str(article.articleid), "title": article.title, "content": article.content,
+                      "imgurl": article.imgurl, "spotid": article.spotid, "good": article.good, "time": article.time,
+                      "username": article.username,"userid": article.userid} for article in s]
+    return jsonify({
+        "msg":"搜索",
+        "info":info
+    })
 
 # 获取文件大小（KB）
 def get_img_kb(filePath):
