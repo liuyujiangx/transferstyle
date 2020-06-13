@@ -7,7 +7,7 @@ from PIL import Image
 from flask import request, jsonify
 
 from app import db, app
-from app.models import Spotinf, Articles, Userarticle, User
+from app.models import Spotinf, Articles, Userarticle, User, Comment
 from app.routes import spotinfprocess
 from app.routes.login import Login
 from app.routes.createId import IdWorker
@@ -87,7 +87,7 @@ def upload():
         spotid=data['spotid'],
         username=data['username'],
         good=0,
-        time=datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+        time=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
         userid = data['userid']
 
     )
@@ -207,6 +207,23 @@ def get_article():
         "info":info,
         "msg":"根据用户获取文章"
     })
+
+
+@home.route('/add/comment/')
+def add_comment():
+    data = request.args.to_dict()
+    user = User.query.filter_by(userid = data["userid"]).first()
+    comment = Comment(
+        articleid = data["articleid"],
+        commentitem = data["content"],
+        commentid = data["userid"],
+        commentname = user.username,
+        time=datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    )
+    db.session.add(comment)
+    db.session.commit()
+    return jsonify({"msg":"添加评论"})
+
 
 # 获取文件大小（KB）
 def get_img_kb(filePath):

@@ -21,7 +21,7 @@ class Articles(db.Model):
     imgurl = db.Column(db.String)
     spotid = db.Column(db.Integer)
     good = db.Column(db.Integer)
-    time = db.Column(db.DateTime)
+    time = db.Column(db.String)
     username = db.Column(db.String)
     userid = db.Column(db.String)
 
@@ -36,6 +36,7 @@ class Comment(db.Model):
     commentitem = db.Column(db.String)
     commentid = db.Column(db.Integer)
     commentname = db.Column(db.String)
+    time = db.Column(db.String)
 
     def __repr__(self):
         return "<Comment %r>" % self.id
