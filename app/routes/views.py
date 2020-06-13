@@ -161,7 +161,7 @@ def get_articles():
         maxpage = articles_count // int(data["limit"])
     else:
         maxpage = (articles_count // int(data["limit"])) + 1
-    articles_list = [{"articleid": article.articleid, "title": article.title, "content": article.content,
+    articles_list = [{"articleid": str(article.articleid), "title": article.title, "content": article.content,
                       "imgurl": article.imgurl, "spotid": article.spotid, "good": article.good, "time": article.time,
                       "username": article.username,"userid": article.userid} for article in articles.items]
     info = []
@@ -200,7 +200,7 @@ def get_article():
     data = request.args.to_dict()
     userid = data["userid"]
     articles = Articles.query.filter_by(userid=userid).all()
-    info = [{"articleid": article.articleid, "title": article.title, "content": article.content,
+    info = [{"articleid": str(article.articleid), "title": article.title, "content": article.content,
                       "imgurl": article.imgurl, "spotid": article.spotid, "good": article.good, "time": article.time,
                       "username": article.username,"userid": article.userid} for article in articles]
     return jsonify({
@@ -233,6 +233,23 @@ def get_comment():
         "info":info,
         "msg":"获取文章的评论"
     })
+
+
+# @home.route('/search/')
+# def search():
+#     data = request.args.to_dict()
+#     data = data['data']
+#     article_title = Articles.query.filter(
+#         Articles.title.like("%" + data + "%") if data is not None else "").all()  # 跟标题相关的
+#     article_contetn = Articles.query.filter(
+#         Articles.content.like("%" + data + "%") if data is not None else "").all()  # 跟关键词相关的
+#     spot = Spotinf.query.filter(
+#         Spotinf.spotname.like("%" + data + "%") if data is not None else "").all()  #跟景区相关的
+#     s=set()
+#     spotset=set()
+#     for i in spot:
+#         article_spot = Articles.query.filter_by()
+
 # 获取文件大小（KB）
 def get_img_kb(filePath):
     # filePath图片地址（包含图片本身）
